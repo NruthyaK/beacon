@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AuthProvider } from "../lib/auth-context";
 import { Toaster } from "../components/ui/sonner";
+import Navbar from "@/components/navbar";
 
 function NotFoundComponent() {
   return (
@@ -110,7 +111,8 @@ function RootShell({ children }: { children: ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        {children}
+        <Navbar />
+        <main>{children}</main>
         <Scripts />
       </body>
     </html>

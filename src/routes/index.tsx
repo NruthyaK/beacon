@@ -71,6 +71,39 @@ function Index() {
           </div>
         </section>
 
+        <section className="mt-16">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold text-navy">Upcoming events</h2>
+            <a href="/events" className="text-sm text-muted-foreground hover:underline">Browse all events</a>
+          </div>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <EventCard title="Campus Hack 2026" date="Jul 15, 2026" location="Hyderabad" description="A 24-hour campus hackathon focused on education technology." to="/events/1" />
+            <EventCard title="Innovate CHS" date="Aug 2, 2026" location="Bengaluru" description="An inter-college innovation challenge with cash prizes and mentorship." to="/events/2" />
+            <EventCard title="CodeSprint" date="Sep 10, 2026" location="Mumbai" description="Open coding competition with multiple tracks and live leaderboards." to="/events/3" />
+          </div>
+        </section>
+
+        <section className="mt-16">
+          <h2 className="text-xl font-semibold text-navy text-center">How it works</h2>
+          <div className="mt-6 grid gap-6 sm:grid-cols-3">
+            <div className="rounded-lg border p-6 text-center">
+              <div className="text-3xl font-semibold text-teal">1</div>
+              <h3 className="mt-2 font-medium">Create an event</h3>
+              <p className="mt-1 text-sm text-muted-foreground">Organizers create events, set tracks, deadlines, and team rules.</p>
+            </div>
+            <div className="rounded-lg border p-6 text-center">
+              <div className="text-3xl font-semibold text-teal">2</div>
+              <h3 className="mt-2 font-medium">Invite jury</h3>
+              <p className="mt-1 text-sm text-muted-foreground">Invite reviewers and configure judging rubrics for fair evaluation.</p>
+            </div>
+            <div className="rounded-lg border p-6 text-center">
+              <div className="text-3xl font-semibold text-teal">3</div>
+              <h3 className="mt-2 font-medium">Publish results</h3>
+              <p className="mt-1 text-sm text-muted-foreground">Results and certificates are issued and leaderboards are updated live.</p>
+            </div>
+          </div>
+        </section>
+
         <footer className="mt-20 text-center text-sm text-muted-foreground">
           <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-6">
             <div>beacont.ai · Hyderabad</div>
