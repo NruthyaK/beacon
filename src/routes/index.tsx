@@ -12,10 +12,12 @@ function Index() {
 
   useEffect(() => {
     if (loading) return;
-    if (!user) { navigate({ to: "/login" }); return; }
-    if (role === "organizer") navigate({ to: "/organizer/dashboard" });
-    else if (role === "jury") navigate({ to: "/login" }); // jury arrives via magic link
-    else navigate({ to: "/login" }); // participant lands on a specific event link
+    // Keep organizers routed to their dashboard, but otherwise
+    // leave the index page as the site's home instead of forcing
+    // unauthenticated users to the login page.
+    if (user && role === "organizer") {
+      navigate({ to: "/organizer/dashboard" });
+    }
   }, [loading, user, role, navigate]);
 
   return (
