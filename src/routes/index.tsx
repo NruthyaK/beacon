@@ -1,8 +1,10 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { BeaconLogo } from "@/components/beacon/logo";
+import EventCard from "@/components/event-card";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -11,6 +13,8 @@ export const Route = createFileRoute("/")({
 function Index() {
   const { loading, user, role } = useAuth();
   const navigate = useNavigate();
+  const [events, setEvents] = useState<any[] | null>(null);
+  const [loadingEvents, setLoadingEvents] = useState(false);
 
   useEffect(() => {
     if (loading) return;
@@ -21,6 +25,25 @@ function Index() {
       navigate({ to: "/organizer/dashboard" });
     }
   }, [loading, user, role, navigate]);
+
+  useEffect(() => {
+    let mounted = true;
+    async function load() {
+      setLoadingEvents(true);
+      try {
+        const { data, error } = await supabase.from('events').select('id,name,event_date,venue,registration_deadline,submission_deadline,college').order('event_date', { ascending: true }).limit(6);
+        if (error) throw error;
+        if (mounted) setEvents(data ?? []);
+      } catch (e) {
+        console.error('Failed to load events', e);
+        if (mounted) setEvents([]);
+      } finally {
+        if (mounted) setLoadingEvents(false);
+      }
+    }
+    load();
+    return () => { mounted = false; };
+  }, []);
 
   return (
     <div className="bg-background">
@@ -77,9 +100,19 @@ function Index() {
             <a href="/events" className="text-sm text-muted-foreground hover:underline">Browse all events</a>
           </div>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <EventCard title="Campus Hack 2026" date="Jul 15, 2026" location="Hyderabad" description="A 24-hour campus hackathon focused on education technology." to="/events/1" />
-            <EventCard title="Innovate CHS" date="Aug 2, 2026" location="Bengaluru" description="An inter-college innovation challenge with cash prizes and mentorship." to="/events/2" />
-            <EventCard title="CodeSprint" date="Sep 10, 2026" location="Mumbai" description="Open coding competition with multiple tracks and live leaderboards." to="/events/3" />
+            {loadingEvents ? (
+              <div className="col-span-full text-center text-muted-foreground">Loading events…</div>
+            ) : events && events.length > 0 ? (
+              events.map((e) => (
+                <EventCard key={e.id} title={e.name} date={new Date(e.event_date).toLocaleDateString()} location={e.venue || e.college || 'Online'} description={e.welcome_message || ''} to={`/events/${e.id}`} />
+              ))
+            ) : (
+              <>
+                <EventCard title="Campus Hack 2026" date="Jul 15, 2026" location="Hyderabad" description="A 24-hour campus hackathon focused on education technology." to="/events/1" />
+                <EventCard title="Innovate CHS" date="Aug 2, 2026" location="Bengaluru" description="An inter-college innovation challenge with cash prizes and mentorship." to="/events/2" />
+                <EventCard title="CodeSprint" date="Sep 10, 2026" location="Mumbai" description="Open coding competition with multiple tracks and live leaderboards." to="/events/3" />
+              </>
+            )}
           </div>
         </section>
 
